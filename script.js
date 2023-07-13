@@ -17,11 +17,23 @@ I.onclick = function(){
 
 var sections = {
     HOME:{
-        home1:function(){},
+        'ABOUT US':function(){},
+        'BROCHURE':function(){},
+        'HOW TO REACH':function(){},
+        'CONTACT US':function(){},
     },
     EVENTS:{
         event1:function(){},
         event2:function(){},
+    },
+    CNS:{
+
+    },
+    'TECH EXPO':{
+
+    },
+    SPONSORS:{
+
     },
 
 }
@@ -30,11 +42,11 @@ for(var section in sections){
     for(var l in sections[section]){
         b = document.createElement('button')
         b.onclick = sections[section][l]
-        b.onmousedown = function(e){
+        b.onpointerdown = function(e){
             var y = (e.target.i*(1/20) + (1/40))*cY
             hole(y,true)
         }
-        b.onmouseup = function(e){
+        b.onpointerup = function(e){
             var y = (e.target.i*(1/20) + (1/40))*cY
             hole(y,false)
         }
