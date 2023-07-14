@@ -25,8 +25,9 @@ Tuck.onpointerdown = function(){
         SB.style.visibility='visible'
         P.style.pointerEvents='none'
         P.style.opacity='50%'
-        rain(100,30,cX/10)
-        if(ready){dusting = true}
+        rain(100,40,cX/10)
+        //if(ready){dusting = true}
+        createDust()
     }
 }
 
@@ -317,28 +318,40 @@ var dustX = []
 var dustY = []
 var dustr = []
 var dustC = []
+function createparticle(i){
+    var R = Math.random()*hY/2
+    var theta = Math.random()*Math.PI/2
+    var x = R*Math.cos(theta)
+    var y = R*Math.sin(theta)
+    var r = Math.random()*hY/10
+    dustX.push(x)
+    dustY.push(y)
+    dustr.push(r)
+    dustC.push(i%colors.length)
+    //h.fillStyle = colors[dustC[i]]
+    //h.beginPath()
+    //h.arc(x,y,r,0,2*Math.PI)
+    //h.fill()
+    //Heading()
+    
+}
 function createDust(){
+    /*
     ready = false
     var x,y,r,R,theta,i
     i=0
     var inter = setInterval(function(){
-        R = Math.random()*hY/2
-        theta = Math.random()*Math.PI/2
-        x = R*Math.cos(theta)
-        y = R*Math.sin(theta)
-        r = Math.random()*hY/10
-        dustX.push(x)
-        dustY.push(y)
-        dustr.push(r)
-        dustC.push(i%colors.length)
-        h.fillStyle = colors[dustC[i]]
-        h.beginPath()
-        h.arc(x,y,r,0,2*Math.PI)
-        h.fill()
-        Heading()
+        createparticle(i)
         i+=1
-        if(dustX.length>=1000){clearInterval(inter);ready=true}
-    },1)
+        if(i>=1000){
+            clearInterval(inter);
+            ready=true
+        }
+    },10)
+    */
+   for(var i=0;i<1000;i++){
+    createparticle(i)
+   }
 }
 var colors = ['purple','black','blue','pink','red','voilet']
 function dust(){
@@ -361,10 +374,10 @@ function dust(){
             h.fill()
         }
     }
-    if(dustX.length<30){
-        dusting=false;
-        createDust();
-        }
+    //if(dustX.length<30){
+    //    dusting=false;
+    //    createDust();
+    //    }
     delete dustX
     delete dustY
     delete dustr
@@ -375,11 +388,13 @@ function dust(){
     dustC = NewdustC
 }
 function Heading(){
-    if(dusting){dust()}
+    //if(dusting){
+        dust()
+    //}
     var s = Math.floor(Math.min(hY*0.8,hX/20))
     h.font = `${s}px times-new-roman`
     h.fillStyle = 'white'
-    h.fillText('AMALTHEA',hX/10,(hY/2) + s/2)
+    h.fillText('AMALTHEA',hY,(hY/2) + s/2)
 }
 function rain(n,dT,R){
     c.clearRect(0,0,cX,cY)
@@ -404,7 +419,7 @@ function resize(){
     T.height = tY = window.innerHeight*0.05
     Tuck.width  = tkX = window.innerHeight*0.05
     Tuck.height = tkY = window.innerHeight*0.05
-    S.style.right = `${T.width*1.2}px`
+    S.style.right = `${T.width*1.5}px`
 }
 window.onresize = resize
 resize()
@@ -418,8 +433,9 @@ window.onload = function(){
     threelines()
     c.fillStyle = 'rgb(37, 34, 44)'
     populateHMenu()
-    tk.lineWidth=5
-    tk.strokeStyle='white'
-    tk.arc(0,0,hY*0.45,Math.PI/2,3*Math.PI/2,true)
-    tk.stroke()
+    im = new Image()
+    im.onload=function(){
+        tk.drawImage(im,0,0,tkX,tkY)
+    }
+    im.src = 'mascot_homepage.png'
 }

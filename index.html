@@ -9,6 +9,7 @@
                 margin: 0;
                 background-color: black;
                 overflow: hidden;
+                pointer-events: none;
             }
             .sbb {
                 position: absolute;
@@ -64,7 +65,7 @@
                 position: absolute;
                 top:20%;
                 height: 50%;
-                right: 1;
+                right: 2vh;
                 border-radius: 20%;
                 pointer-events: all;
             }
@@ -73,9 +74,8 @@
             }
             #sections{
                 position: absolute;
-                right: 10%;
-                top: 10%;
-                bottom: 10%;
+                top: 0%;
+                bottom: 50%;
                 width: fit-content;
             }
             #heading{
@@ -130,11 +130,10 @@
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 7vh;
-                height: 7vh;
+                width: 9vh;
+                height: 9vh;
                 z-index: 6;
-                background-color: rgba(238, 222, 222, 0.462);
-                border-bottom-right-radius: 100%;
+                pointer-events: all;
             }
         </style>
     </head>
