@@ -1,3 +1,34 @@
+var sections = {
+    HOME:{
+        'YO!'    :function(){},
+        'GIMME'    :function(){},
+        'THE':function(){},
+        'LINK'  :function(){},
+        "PLAY WITH THE GODDAM THING PLZ":function(){},
+    },
+    EVENTS:{
+        "YOU CAN'T WIN":function(){},
+        "GIVE UP AND DIE":function(){},
+    },
+    CNS:{
+        "HAVING FUN YET ?":function(){},
+    },
+    'TECH EXPO':{
+        "LOTS of TECH":function(){},
+    },
+    SPONSORS:{
+        "ASK BEZODIT":function(){},
+    },
+
+}
+const links = {
+    CNS:'https://pj29072004.github.io/SpaceDust/',
+    EVENTS:'https://pj29072004.github.io/Snek/',
+    HOME:'https://pj29072004.github.io/Tunnel/',
+    SPONSORS:'https://pj29072004.github.io/WinterCarnivalTetris/',
+    'TECH EXPO':'https://pj29072004.github.io/Trace/',
+}
+
 const T = document.getElementById('toggle')
 const Tuck = document.getElementById('Tuck')
 const tk = Tuck.getContext('2d')
@@ -168,36 +199,7 @@ function dissolveThreelines(){
         }
     },10)
 }
-var sections = {
-    HOME:{
-        'ABOUT US'    :function(){},
-        'BROCHURE'    :function(){},
-        'HOW TO REACH':function(){},
-        'CONTACT US'  :function(){},
-    },
-    EVENTS:{
-        "YOU CAN'T WIN":function(){},
-        "GIVE UP AND DIE":function(){},
-    },
-    CNS:{
-        ";_;":function(){},
-    },
-    'TECH EXPO':{
-        "LOTS of TECH":function(){},
-        "PLAY WITH THE GODDAM THING PLZ":function(){},
-    },
-    SPONSORS:{
-        ";_;":function(){},
-    },
 
-}
-const links = {
-    HOME:'https://pj29072004.github.io/SpaceDust/',
-    EVENTS:'https://pj29072004.github.io/Snek/',
-    CNS:'https://pj29072004.github.io/Tunnel/',
-    'TECH EXPO':'link4',
-    SPONSORS:'link5',
-}
 for(var section in sections){
     var b;
     for(var l in sections[section]){
