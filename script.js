@@ -168,13 +168,39 @@ function drops(n,r){
     }
 }
 
+var dustX = []
+var dustY = []
+var dustr = []
+function createDust(){
+    var x,y,r
+    for(var i=0;i<1000;i++){
+        x = Math.random()*hX
+        y = Math.random()*hY
+        r = hY/(10+(x**2+y**2)/100)
+        dustX.push(x)
+        dustY.push(y)
+        dustr.push(r)
+    }
+}
+var colors = ['red','blue','green','yellow','orange','voilet']
+function dust(){
+    h.clearRect(0,0,hX,hY)
+    for(var i=0;i<1000;i++){
+        dustX[i] *= (1+0.001*Math.random())
+        dustY[i] *= (1+0.0005*Math.random())
+        h.fillStyle = colors[i%6]
+        h.beginPath()
+        h.arc(dustX[i],dustY[i],dustr[i],0,2*Math.PI)
+        h.fill()
+    }
+}
 function Heading(){
-    var s = Math.floor(Math.min(hY*0.8,hX/10))
+    dust()
+    var s = Math.floor(Math.min(hY*0.8,hX/20))
     h.font = `${s}px times-new-roman`
     h.fillStyle = 'white'
     h.fillText('AMALTHEA',hX/10,(hY/2) + s/2)
 }
-
 function rain(n,dT,R){
     c.clearRect(0,0,cX,cY)
     var dr = R/n
@@ -193,7 +219,7 @@ function rain(n,dT,R){
 function resize(){
     C.width  = cX = window.innerWidth*0.3
     C.height = cY = window.innerHeight*0.7
-    H.width  = hX = window.innerWidth*0.5
+    H.width  = hX = window.innerWidth
     H.height = hY = window.innerHeight*0.1
 }
 window.onresize = resize
@@ -201,5 +227,7 @@ resize()
 populateTitleBar()
 window.onload = function(){
     bList[0].click()
+    createDust()
     Heading()
+    setInterval(Heading,1)
 }
