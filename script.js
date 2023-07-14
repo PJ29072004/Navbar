@@ -9,6 +9,7 @@ const H = document.getElementById('heading')
 const h = H.getContext('2d')
 const P = document.getElementById('Page')
 const ham = document.getElementById('ham')
+var Color = 'black'//'rgb(37, 34, 44)'
 var cX,cY,hX,hY
 var currentSection=0
 var dusting = false
@@ -25,7 +26,7 @@ Tuck.onpointerdown = function(){
         SB.style.visibility='visible'
         P.style.pointerEvents='none'
         P.style.opacity='50%'
-        rain(100,40,cX/10)
+        rain(100,1,cX/10)
         //if(ready){dusting = true}
         createDust()
     }
@@ -33,11 +34,11 @@ Tuck.onpointerdown = function(){
 
 T.onclick = function(){
     if(ham.style.visibility=='visible'){
-        var right=0
+        var width=20
         var inter = setInterval(function(){
-            ham.style.right=`${right}%`
-            right -= 1
-            if(right<=-20){
+            ham.style.width=`${width}%`
+            width -= 1
+            if(width<=0){
                 clearInterval(inter)
             }
         },10)
@@ -51,12 +52,12 @@ T.onclick = function(){
         setTimeout(threelines,100)
     }
     else {
-        var right=-20
+        var width=0
         ham.style.visibility='visible'
         var inter = setInterval(function(){
-            ham.style.right=`${right}%`
-            right += 1
-            if(right>=0){
+            ham.style.width=`${width}%`
+            width += 1
+            if(width>=20){
                 clearInterval(inter)
             }
         },10)
@@ -167,7 +168,6 @@ function dissolveThreelines(){
         }
     },10)
 }
-
 var sections = {
     HOME:{
         'ABOUT US'    :function(){},
@@ -191,7 +191,6 @@ var sections = {
     },
 
 }
-
 const links = {
     HOME:'https://pj29072004.github.io/SpaceDust/',
     EVENTS:'https://pj29072004.github.io/Snek/',
@@ -199,7 +198,6 @@ const links = {
     'TECH EXPO':'link4',
     SPONSORS:'link5',
 }
-
 for(var section in sections){
     var b;
     for(var l in sections[section]){
@@ -271,7 +269,7 @@ function populateTitleBar(){
 }
 
 function hole(y,active=false){
-    c.fillStyle = 'rgb(37, 34, 44)'
+    c.fillStyle = Color
     c.clearRect(0,0,cX,cY)
     c.beginPath()
     c.moveTo(0,0)
@@ -300,7 +298,7 @@ function hole(y,active=false){
     c.lineTo(cX*0.2,y+r)
     c.closePath()
     c.fill()
-    c.fillStyle = 'rgb(37, 34, 44)'
+    c.fillStyle = Color
 }
 
 function drops(n,r){
@@ -349,7 +347,7 @@ function createDust(){
         }
     },10)
     */
-   for(var i=0;i<1000;i++){
+   for(var i=0;i<200;i++){
     createparticle(i)
    }
 }
@@ -397,16 +395,18 @@ function Heading(){
     h.fillText('AMALTHEA',hY,(hY/2) + s/2)
 }
 function rain(n,dT,R){
+    SB.style.opacity = `0`
+    bList[currentSection].click()
     c.clearRect(0,0,cX,cY)
     var dr = R/n
     var r = dr
     var inter = setInterval(function(){
-        drops(100,r);
+        drops(10,r);
+        SB.style.opacity = `${100*r/R}%`
         r += dr
         if(r>R){
             clearInterval(inter)
             c.fillRect(0,0,cX,cY)
-            bList[currentSection].click()
         }
     },dT)
 }
@@ -427,11 +427,9 @@ populateTitleBar()
 createDust()
 window.onload = function(){
     bList[0].click()
-    setTimeout(function(){
-        setInterval(Heading,1)
-    },2000)
+    setInterval(Heading,1)
     threelines()
-    c.fillStyle = 'rgb(37, 34, 44)'
+    c.fillStyle = Color
     populateHMenu()
     im = new Image()
     im.onload=function(){
