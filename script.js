@@ -1,4 +1,5 @@
-const I = document.getElementById('toggle')
+const T = document.getElementById('toggle')
+const t = T.getContext('2d')
 const SB = document.getElementById('sidebar')
 const C = document.getElementById('C')
 const c = C.getContext('2d')
@@ -9,18 +10,102 @@ var cX,cY,hX,hY
 var currentSection=0
 S = document.getElementById('sections')
 
-I.onclick = function(){
+T.onclick = function(){
     if(SB.style.visibility=='visible'){
         SB.style.visibility='hidden'
         P.style.pointerEvents='all'
         P.style.opacity='100%'
+        dissolveCross()
+        setTimeout(threelines,100)
     }
     else {
         SB.style.visibility='visible'
         P.style.pointerEvents='none'
         P.style.opacity='50%'
         rain(100,10,cX/10)
+        dissolveThreelines()
+        setTimeout(cross,100)
     }
+}
+
+function threelines(){
+    t.lineCap='round'
+    t.lineWidth=tY/10
+    t.strokeStyle='white'
+    var y = tY/2
+    var inter = setInterval(function(){
+        t.clearRect(0,0,tX,tY)
+        t.beginPath()
+        t.moveTo(tX/5,  y)
+        t.lineTo(4*tX/5,y)
+        t.moveTo(tX/5,  tY/2)
+        t.lineTo(4*tX/5,tY/2)
+        t.moveTo(tX/5,  tY-y)
+        t.lineTo(4*tX/5,tY-y)
+        t.stroke()
+        y -= 0.1*tY
+        if(y<tY/5){
+            clearInterval(inter)
+        }
+    },10)
+    
+}
+function cross(){
+    t.lineCap='round'
+    t.lineWidth=tY/10
+    t.strokeStyle='white'
+    var y = tY/2
+    var inter = setInterval(function(){
+        t.clearRect(0,0,tX,tY)
+        t.beginPath()
+        t.moveTo(tX/5,  y)
+        t.lineTo(4*tX/5,tY-y)
+        t.moveTo(tX/5,  tY-y)
+        t.lineTo(4*tX/5,y)
+        t.stroke()   
+        y -= 0.1*tY
+        if(y<tY/5){
+            clearInterval(inter)
+        }
+    },10)
+}
+function dissolveCross(){
+    t.lineCap='round'
+    t.lineWidth=tY/10
+    t.strokeStyle='white'
+    var y = tY/5
+    var inter = setInterval(function(){
+        t.clearRect(0,0,tX,tY)
+        t.beginPath()
+        t.moveTo(tX/5,  y)
+        t.lineTo(4*tX/5,tY-y)
+        t.moveTo(tX/5,  tY-y)
+        t.lineTo(4*tX/5,y)
+        t.stroke()   
+        y += 0.1*tY
+        if(y>tY/2){
+            clearInterval(inter)
+        }
+    },10)
+}
+function dissolveThreelines(){
+    t.lineCap='round'
+    t.lineWidth=tY/10
+    t.strokeStyle='white'
+    var y = tY/5
+    var inter = setInterval(function(){
+        t.clearRect(0,0,tX,tY)
+        t.beginPath()
+        t.moveTo(tX/5,  y)
+        t.lineTo(4*tX/5,tY-y)
+        t.moveTo(tX/5,  tY-y)
+        t.lineTo(4*tX/5,y)
+        t.stroke()   
+        y += 0.1*tY
+        if(y>tY/2){
+            clearInterval(inter)
+        }
+    },10)
 }
 
 var sections = {
@@ -221,6 +306,9 @@ function resize(){
     C.height = cY = window.innerHeight*0.7
     H.width  = hX = window.innerWidth
     H.height = hY = window.innerHeight*0.1
+    T.width  = tX = window.innerHeight*0.05
+    T.height = tY = window.innerHeight*0.05
+
 }
 window.onresize = resize
 resize()
@@ -230,4 +318,5 @@ window.onload = function(){
     createDust()
     Heading()
     setInterval(Heading,1)
+    threelines()
 }
