@@ -145,11 +145,11 @@ for(var section in sections){
         b = document.createElement('button')
         b.onclick = sections[section][l]
         b.onpointerdown = function(e){
-            var y = (e.target.i*(1/20) + (1/40))*cY
+            var y = (e.target.i*(1/20) + (3/40))*cY
             hole(y,true)
         }
         b.onpointerup = function(e){
-            var y = (e.target.i*(1/20) + (1/40))*cY
+            var y = (e.target.i*(1/20) + (3/40))*cY
             hole(y,false)
         }
         b.className = 'sbb'
@@ -182,7 +182,7 @@ function populateSideBar(section){
     for(var l in L){
         SB.appendChild(L[l])
         aList.push(L[l])
-        L[l].style.top = `${5*i + 0.5}%`
+        L[l].style.top = `${5*i + 5.5}%`
         L[l].i = i
         i += 1
     }
@@ -209,9 +209,8 @@ function populateTitleBar(){
     }
 }
 
-
 function hole(y,active=false){
-    c.fillStyle = 'black'
+    c.fillStyle = 'rgb(37, 34, 44)'
     c.clearRect(0,0,cX,cY)
     c.beginPath()
     c.moveTo(0,0)
@@ -240,6 +239,7 @@ function hole(y,active=false){
     c.lineTo(cX*0.2,y+r)
     c.closePath()
     c.fill()
+    c.fillStyle = 'rgb(37, 34, 44)'
 }
 
 function drops(n,r){
@@ -300,7 +300,6 @@ function rain(n,dT,R){
         }
     },dT)
 }
-
 function resize(){
     C.width  = cX = window.innerWidth*0.3
     C.height = cY = window.innerHeight*0.7
@@ -308,7 +307,7 @@ function resize(){
     H.height = hY = window.innerHeight*0.1
     T.width  = tX = window.innerHeight*0.05
     T.height = tY = window.innerHeight*0.05
-
+    S.style.right = `${T.width*1.2}px`
 }
 window.onresize = resize
 resize()
@@ -319,4 +318,5 @@ window.onload = function(){
     Heading()
     setInterval(Heading,1)
     threelines()
+    c.fillStyle = 'rgb(37, 34, 44)'
 }
