@@ -1,4 +1,5 @@
 const T = document.getElementById('toggle')
+const Tuck = document.getElementById('Tuck')
 const t = T.getContext('2d')
 const SB = document.getElementById('sidebar')
 const C = document.getElementById('C')
@@ -6,28 +7,63 @@ const c = C.getContext('2d')
 const H = document.getElementById('heading')
 const h = H.getContext('2d')
 const P = document.getElementById('Page')
+const ham = document.getElementById('ham')
 var cX,cY,hX,hY
 var currentSection=0
 S = document.getElementById('sections')
 
-T.onclick = function(){
+Tuck.onpointerdown = function(){
     if(SB.style.visibility=='visible'){
         SB.style.visibility='hidden'
         P.style.pointerEvents='all'
         P.style.opacity='100%'
-        dissolveCross()
-        setTimeout(threelines,100)
     }
     else {
         SB.style.visibility='visible'
         P.style.pointerEvents='none'
         P.style.opacity='50%'
         rain(100,10,cX/10)
+        createDust()
+    }
+}
+
+T.onclick = function(){
+    if(ham.style.visibility=='visible'){
+        ham.style.visibility='hidden'
+        ham.style.pointerEvents='none'
+        P.style.pointerEvents='all'
+        P.style.opacity='100%'
+        dissolveCross()
+        setTimeout(threelines,100)
+    }
+    else {
+        ham.style.visibility='visible'
+        ham.style.pointerEvents='all'
+        P.style.pointerEvents='none'
+        P.style.opacity='50%'
         dissolveThreelines()
         setTimeout(cross,100)
     }
 }
+const hlinks = {
+    HOME:'link1',
+    ABOUT:'link2',
+}
 
+function populateHMenu(){
+    var top = 1
+    var a;
+    for(var l in hlinks){
+        a = document.createElement('a')
+        a.href = hlinks[l]
+        a.innerText = l
+        a.className = 'HMenu'
+        a.style.top = `${top}vh`
+        top += 3
+        ham.appendChild(a)
+    }
+    ham.style.height=`${top+2}vh`
+}
 function threelines(){
     t.lineCap='round'
     t.lineWidth=tY/10
@@ -131,7 +167,8 @@ var sections = {
     },
 
 }
-var links = {
+
+const links = {
     HOME:'https://pj29072004.github.io/SpaceDust/',
     EVENTS:'https://pj29072004.github.io/Snek/',
     CNS:'https://pj29072004.github.io/Tunnel/',
@@ -256,28 +293,50 @@ function drops(n,r){
 var dustX = []
 var dustY = []
 var dustr = []
+var dustC = []
 function createDust(){
-    var x,y,r
+    var x,y,r,R,theta
     for(var i=0;i<1000;i++){
-        x = Math.random()*hX
-        y = Math.random()*hY
-        r = hY/(10+(x**2+y**2)/100)
+        R = Math.random()*hY/2
+        theta = Math.random()*Math.PI/2
+        x = R*Math.cos(theta)
+        y = R*Math.sin(theta)
+        r = Math.random()*hY/10
         dustX.push(x)
         dustY.push(y)
         dustr.push(r)
+        dustC.push(i%colors.length)
     }
 }
 var colors = ['red','blue','green','yellow','orange','voilet']
 function dust(){
+    var NewdustX = []
+    var NewdustY = []
+    var Newdustr = []
+    var NewdustC = []
+    var R
     h.clearRect(0,0,hX,hY)
-    for(var i=0;i<1000;i++){
-        dustX[i] *= (1+0.001*Math.random())
-        dustY[i] *= (1+0.0005*Math.random())
-        h.fillStyle = colors[i%6]
-        h.beginPath()
-        h.arc(dustX[i],dustY[i],dustr[i],0,2*Math.PI)
-        h.fill()
+    for(var i=0;i<dustX.length;i++){
+        if((dustX[i]<hX)&&(dustY[i]<hY)){
+            R = (dustX[i]**2 + dustY[i]**2)**(1/2)
+            NewdustX.push(dustX[i] + Math.random()*(dustX[i]/R)*(hY*(1/100+1/(R+0.1)))*dustr[i])
+            NewdustY.push(dustY[i] + Math.random()*(dustY[i]/R)*(hY*(1/100+1/(R+0.1)))*dustr[i])
+            Newdustr.push(dustr[i])
+            NewdustC.push(dustC[i])
+            h.fillStyle = colors[dustC[i]]
+            h.beginPath()
+            h.arc(dustX[i],dustY[i],dustr[i],0,2*Math.PI)
+            h.fill()
+        }
     }
+    delete dustX
+    delete dustY
+    delete dustr
+    delete dustC
+    dustX = NewdustX
+    dustY = NewdustY
+    dustr = Newdustr
+    dustC = NewdustC
 }
 function Heading(){
     dust()
@@ -316,7 +375,8 @@ window.onload = function(){
     bList[0].click()
     createDust()
     Heading()
-    setInterval(Heading,1)
+    setInterval(Heading,10)
     threelines()
     c.fillStyle = 'rgb(37, 34, 44)'
+    populateHMenu()
 }
