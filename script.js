@@ -1,5 +1,6 @@
 const T = document.getElementById('toggle')
 const Tuck = document.getElementById('Tuck')
+const tk = Tuck.getContext('2d')
 const t = T.getContext('2d')
 const SB = document.getElementById('sidebar')
 const C = document.getElementById('C')
@@ -10,6 +11,8 @@ const P = document.getElementById('Page')
 const ham = document.getElementById('ham')
 var cX,cY,hX,hY
 var currentSection=0
+var dusting = false
+var ready = false
 S = document.getElementById('sections')
 
 Tuck.onpointerdown = function(){
@@ -22,14 +25,24 @@ Tuck.onpointerdown = function(){
         SB.style.visibility='visible'
         P.style.pointerEvents='none'
         P.style.opacity='50%'
-        rain(100,10,cX/10)
-        createDust()
+        rain(100,30,cX/10)
+        if(ready){dusting = true}
     }
 }
 
 T.onclick = function(){
     if(ham.style.visibility=='visible'){
-        ham.style.visibility='hidden'
+        var right=0
+        var inter = setInterval(function(){
+            ham.style.right=`${right}%`
+            right -= 1
+            if(right<=-20){
+                clearInterval(inter)
+            }
+        },10)
+        setTimeout(function(){
+            ham.style.visibility='hidden'
+        },300)
         ham.style.pointerEvents='none'
         P.style.pointerEvents='all'
         P.style.opacity='100%'
@@ -37,7 +50,15 @@ T.onclick = function(){
         setTimeout(threelines,100)
     }
     else {
+        var right=-20
         ham.style.visibility='visible'
+        var inter = setInterval(function(){
+            ham.style.right=`${right}%`
+            right += 1
+            if(right>=0){
+                clearInterval(inter)
+            }
+        },10)
         ham.style.pointerEvents='all'
         P.style.pointerEvents='none'
         P.style.opacity='50%'
@@ -46,8 +67,10 @@ T.onclick = function(){
     }
 }
 const hlinks = {
-    HOME:'link1',
-    ABOUT:'link2',
+    'ABOUT US'    :'link',
+    'BROCHURE'    :'link',
+    'HOW TO REACH':'link',
+    'CONTACT US'  :'link',
 }
 
 function populateHMenu(){
@@ -146,10 +169,10 @@ function dissolveThreelines(){
 
 var sections = {
     HOME:{
-        'ABOUT US':function(){},
-        'BROCHURE':function(){},
+        'ABOUT US'    :function(){},
+        'BROCHURE'    :function(){},
         'HOW TO REACH':function(){},
-        'CONTACT US':function(){},
+        'CONTACT US'  :function(){},
     },
     EVENTS:{
         "YOU CAN'T WIN":function(){},
@@ -295,8 +318,10 @@ var dustY = []
 var dustr = []
 var dustC = []
 function createDust(){
-    var x,y,r,R,theta
-    for(var i=0;i<1000;i++){
+    ready = false
+    var x,y,r,R,theta,i
+    i=0
+    var inter = setInterval(function(){
         R = Math.random()*hY/2
         theta = Math.random()*Math.PI/2
         x = R*Math.cos(theta)
@@ -306,9 +331,16 @@ function createDust(){
         dustY.push(y)
         dustr.push(r)
         dustC.push(i%colors.length)
-    }
+        h.fillStyle = colors[dustC[i]]
+        h.beginPath()
+        h.arc(x,y,r,0,2*Math.PI)
+        h.fill()
+        Heading()
+        i+=1
+        if(dustX.length>=1000){clearInterval(inter);ready=true}
+    },1)
 }
-var colors = ['red','blue','green','yellow','orange','voilet']
+var colors = ['purple','black','blue','pink','red','voilet']
 function dust(){
     var NewdustX = []
     var NewdustY = []
@@ -319,8 +351,8 @@ function dust(){
     for(var i=0;i<dustX.length;i++){
         if((dustX[i]<hX)&&(dustY[i]<hY)){
             R = (dustX[i]**2 + dustY[i]**2)**(1/2)
-            NewdustX.push(dustX[i] + Math.random()*(dustX[i]/R)*(hY*(1/100+1/(R+0.1)))*dustr[i])
-            NewdustY.push(dustY[i] + Math.random()*(dustY[i]/R)*(hY*(1/100+1/(R+0.1)))*dustr[i])
+            NewdustX.push(dustX[i] + Math.random()*(dustX[i]/R)*(hY*(0.1/100+1/(R+0.1)))*dustr[i])
+            NewdustY.push(dustY[i] + Math.random()*(dustY[i]/R)*(hY*(0.1/100+1/(R+0.1)))*dustr[i])
             Newdustr.push(dustr[i])
             NewdustC.push(dustC[i])
             h.fillStyle = colors[dustC[i]]
@@ -329,6 +361,10 @@ function dust(){
             h.fill()
         }
     }
+    if(dustX.length<30){
+        dusting=false;
+        createDust();
+        }
     delete dustX
     delete dustY
     delete dustr
@@ -339,7 +375,7 @@ function dust(){
     dustC = NewdustC
 }
 function Heading(){
-    dust()
+    if(dusting){dust()}
     var s = Math.floor(Math.min(hY*0.8,hX/20))
     h.font = `${s}px times-new-roman`
     h.fillStyle = 'white'
@@ -366,17 +402,24 @@ function resize(){
     H.height = hY = window.innerHeight*0.1
     T.width  = tX = window.innerHeight*0.05
     T.height = tY = window.innerHeight*0.05
+    Tuck.width  = tkX = window.innerHeight*0.05
+    Tuck.height = tkY = window.innerHeight*0.05
     S.style.right = `${T.width*1.2}px`
 }
 window.onresize = resize
 resize()
 populateTitleBar()
+createDust()
 window.onload = function(){
     bList[0].click()
-    createDust()
-    Heading()
-    setInterval(Heading,10)
+    setTimeout(function(){
+        setInterval(Heading,1)
+    },2000)
     threelines()
     c.fillStyle = 'rgb(37, 34, 44)'
     populateHMenu()
+    tk.lineWidth=5
+    tk.strokeStyle='white'
+    tk.arc(0,0,hY*0.45,Math.PI/2,3*Math.PI/2,true)
+    tk.stroke()
 }
