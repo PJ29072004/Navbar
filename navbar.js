@@ -24,7 +24,7 @@ var sections = {
 const links = {
     CNS:'https://pj29072004.github.io/SpaceDust/',
     EVENTS:'https://pj29072004.github.io/Snek/',
-    HOME:'/home/hp/Web/Tunnel/index.html',//'https://pj29072004.github.io/Tunnel/',
+    HOME:'https://pj29072004.github.io/Tunnel/',
     SPONSORS:'https://pj29072004.github.io/WinterCarnivalTetris/',
     'TECH EXPO':'https://pj29072004.github.io/Trace/',
 }
