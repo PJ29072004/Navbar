@@ -59,6 +59,7 @@ var dustr = []
 var dustC = []
 var colors = ['purple','black','blue','pink','red','voilet']
 var dusting=true
+var offline = false
 
 //hamburger menu
 function populateHMenu(){
@@ -385,6 +386,10 @@ function HidePage(){
     P.style.zIndex='-2'
 }
 function showPage(){
+    if(offline){
+        alert("You are offline..play with the tunnel while you're waiting :)")
+        return
+    }
     P.style.opacity='1'
     P.style.visibility='visible'
     P.style.zIndex='2'
@@ -465,3 +470,5 @@ window.onload = function(){
     populateHMenu()
     resize()
 }
+window.ononline=function(){offline=false}
+window.onoffline=function(){offline=true}
